@@ -6,19 +6,19 @@ const PORT = process.env.PORT || 4005;
 
 app.use(express.json());
 
-app.get("/api/rates/:baseCurrency/:currency", async (req, res, next) => {
+app.get("/api/rates", async (req, res, next) => {
     try {
-        const { baseCurrency, currency } = req.params;
+        const {base, currency} = req.query;
 
         const response = await axios.get(
-            `https://api.exchangeratesapi.io/latest?base=${baseCurrency}&symbols=${currency}`
+            `https://api.exchangeratesapi.io/latest?base=${base}&symbols=${currency}`
         );
 
-        const { rates, date, base } = response.data;
+        const { base: baseCurrency, rates, date} = response.data;
 
         res.json({
             results: {
-                base,
+                baseCurrency,
                 date,
                 rates,
             },
